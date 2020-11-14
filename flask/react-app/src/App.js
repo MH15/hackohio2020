@@ -14,7 +14,9 @@ import {
   Modal
 
 } from "react-bootstrap"
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
+import IosRefresh from "react-ionicons/lib/IosRefresh"
+import LogoGithub from "react-ionicons/lib/LogoGithub"
 import IosRefresh from "react-ionicons/lib/IosRefresh"
 import LogoGithub from "react-ionicons/lib/LogoGithub"
 import MdPause from "react-ionicons/lib/MdPause"
@@ -166,7 +168,6 @@ function App() {
           </Col>
         </Row>
       </Container>
-
     </div >
   );
 }
