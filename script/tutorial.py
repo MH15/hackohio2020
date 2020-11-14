@@ -11,8 +11,8 @@ from enum import Enum
 
 
 
-face_cascade = cv2.CascadeClassifier('vision/haarcascade_frontalface_default.xml')
-nose_cascade = cv2.CascadeClassifier('vision/haarcascade_nose.xml')
+face_cascade = cv2.CascadeClassifier('script/haarcascade_frontalface_default.xml')
+nose_cascade = cv2.CascadeClassifier('script/haarcascade_nose.xml')
 
 
 # Read video
