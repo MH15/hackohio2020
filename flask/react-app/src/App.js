@@ -56,7 +56,10 @@ function App() {
       </Modal>
 
 
-      <Container fluid style={{ backgroundColor: '#007bff' }}>
+      <Container fluid style={{
+        backgroundColor: '#007bff',
+        paddingBottom: '30px'
+      }}>
         <Row>
           <Col>
             <Navbar bg="primary" expand="lg" text="light">
