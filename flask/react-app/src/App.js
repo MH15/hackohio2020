@@ -17,6 +17,14 @@ import {
 import React, { useState } from 'react';
 import IosRefresh from "react-ionicons/lib/IosRefresh"
 import LogoGithub from "react-ionicons/lib/LogoGithub"
+import IosRefresh from "react-ionicons/lib/IosRefresh"
+import LogoGithub from "react-ionicons/lib/LogoGithub"
+import MdPause from "react-ionicons/lib/MdPause"
+import MdCheckmarkCircle from "react-ionicons/lib/MdCheckmarkCircle"
+import IosCloseCircle from "react-ionicons/lib/IosCloseCircle"
+import io from "socket.io-client";
+const ENDPOINT = "localhost:3210";
+
 
 /*
 IosCheckmarkCircle
@@ -25,8 +33,47 @@ IosRefresh
 */
 
 
+
+
 function App() {
-  let status = "working"
+  const [iconComponent, setIconComponent] = useState(<MdPause style={{ width: '100%', margin: '0 auto' }} fontSize="60px" color="#347eff" rotate={false} />)
+
+  // let socket = io("127.0.0.1:3210")
+  // socket.on("connect", (data) => {
+  //   console.log(data);
+  // })
+
+  const [status, setStatus] = useState("inactive")
+  useEffect(() => {
+    const socket = new WebSocket('ws://localhost:8765');
+    // Connection opened
+    socket.addEventListener('open', function (event) {
+      console.log("connected to server")
+    });
+    socket.addEventListener("message", data => {
+      let json = JSON.parse(data.data)
+      switch (json["type"]) {
+        case "status":
+          switch (json["value"]) {
+            case "inactive":
+              setIconComponent(<MdPause style={{ width: '100%', margin: '0 auto' }} fontSize="60px" color="#347eff" rotate={false} />)
+              break
+            case "working":
+              setIconComponent(<IosRefresh style={{ width: '100%', margin: '0 auto' }} fontSize="60px" color="#347eff" rotate={true} />)
+              break
+            case "success":
+              setIconComponent(<MdCheckmarkCircle style={{ width: '100%', margin: '0 auto' }} fontSize="60px" color="green" rotate={false} />)
+              break
+            case "failure":
+              setIconComponent(<IosCloseCircle style={{ width: '100%', margin: '0 auto' }} fontSize="60px" color="red" rotate={false} />)
+              break
+          }
+          setStatus(json["value"])
+      }
+      // setStatus(data);
+      // console.log(json);
+    });
+  }, []);
 
   const [show, setShow] = useState(false);
 
@@ -97,9 +144,10 @@ function App() {
               <Card style={{ width: '100%' }} bg={"dark"} text={"light"}>
                 <Card.Header>System Status</Card.Header>
                 <Card.Body>
-                  <Card.Text>
-                    <IosRefresh style={{ width: '100%', margin: '0 auto' }} fontSize="60px" color="#347eff" rotate={true} />
-                    <p style={{ textAlign: 'center' }}> {status} </p>
+                  <Card.Text style={{ textAlign: 'center' }}>
+                    {iconComponent}
+
+                    {status}
                   </Card.Text>
                 </Card.Body>
               </Card>
@@ -120,20 +168,6 @@ function App() {
           </Col>
         </Row>
       </Container>
-      {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header> */}
     </div >
   );
 }
