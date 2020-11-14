@@ -2,7 +2,7 @@ import cv2
 import sys
 
 # cascPath = sys.argv[1]
-cascPath = "vision/haarcascade_mcs_nose.xml"
+cascPath = "vision/Nariz.xml"
 # Create the haar cascade
 noseCascade = cv2.CascadeClassifier(cascPath)
 
