@@ -13,5 +13,6 @@ Run `python3 vision/opencv_test.py` in the Terminal. The integrated console in v
 
 
 # how to use dlib mouth detection
+0. `brew install cmake` if on MacOS
 1. install dlib and opencv (pip install opencv-python and pip install dlib)
 2. go to hackohio2020/vision directory and run "python dlib_test.py"
