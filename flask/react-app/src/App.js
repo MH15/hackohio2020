@@ -46,7 +46,7 @@ function App() {
         <Row>
           <Col>
             <Card>
-              <Card.Img variant="top" src="holder.js/100px180" />
+              <Card.Img variant="top" src="/video_feed" />
               <Card.Body>
                 <Card.Title>Card Title</Card.Title>
                 <Card.Text>
@@ -97,7 +97,7 @@ function App() {
           Learn React
         </a>
       </header> */}
-    </div>
+    </div >
   );
 }
 
