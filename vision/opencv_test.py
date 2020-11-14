@@ -2,8 +2,11 @@ import cv2
 import sys
 
 # cascPath = sys.argv[1]
-cascPath = "vision/haarcascade_frontalface_default.xml"
-faceCascade = cv2.CascadeClassifier(cascPath)
+# cascPath = "vision/haarcascade_frontalface_default.xml"
+# faceCascade = cv2.CascadeClassifier(cascPath)
+
+faceCascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+eyeCascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml')
 
 video_capture = cv2.VideoCapture(0)
 # sys.exit()
