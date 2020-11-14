@@ -10,3 +10,8 @@ Run `python3 vision/opencv_test.py` in the Terminal. The integrated console in v
 3. Type 'source/env/bin activate'. This will activate your virtual environment.
 4. Only install packages when the right virtual environment is activated.
 5. Type 'deactivate' to deactivate the virtual environment.
+
+
+# how to use dlib mouth detection
+1. install dlib and opencv (pip install opencv-python and pip install dlib)
+2. go to hackohio2020/vision directory and run "python dlib_test.py"
