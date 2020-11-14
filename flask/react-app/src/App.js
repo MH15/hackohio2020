@@ -69,7 +69,7 @@ function App() {
           setStatus(json["value"])
       }
       // setStatus(data);
-      console.log(json);
+      // console.log(json);
     });
   }, []);
 
