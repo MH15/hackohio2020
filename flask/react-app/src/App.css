@@ -4,6 +4,15 @@
     overflow-y: hidden; */
 }
 
+* {
+    outline: none;
+}
+
+.row {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+}
+
 .App-logo {
     height: 40vmin;
     pointer-events: none;
