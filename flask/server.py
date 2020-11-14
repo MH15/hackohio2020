@@ -1,23 +1,40 @@
 # import the necessary packages
-import websockets
-import asyncio
-from imutils.video import VideoStream
 from flask import Response
 from flask import Flask
 from flask import render_template
-import threading
-import argparse
-import datetime
-import imutils
-import time
+from camera import VideoCamera
 import cv2
+import websockets
+import asyncio
+import threading
 import json
-import time
 from multiprocessing import Pool
-import time
+
+# https://medium.com/datadriveninvestor/video-streaming-using-flask-and-opencv-c464bf8473d6
+# initialize a flask object
+app = Flask(__name__)
+
+
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+
+def gen(camera):
+    while True:
+        # get camera frame
+        frame = camera.get_frame()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+
+
+@app.route("/video_feed")
+def video_feed():
+    return Response(gen(VideoCamera()),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
+
 
 # https://www.pyimagesearch.com/2019/09/02/opencv-stream-video-to-web-browser-html-page/
-
 # initialize the output frame and a lock used to ensure thread-safe
 # exchanges of the output frames (useful when multiple browsers/tabs
 # are viewing the stream)
@@ -25,12 +42,6 @@ outputFrame = None
 lock = threading.Lock()
 # initialize a flask object
 app = Flask(__name__)
-
-
-@app.route("/")
-def index():
-    # return the rendered template
-    return render_template("index.html")
 
 
 def dataBuilder(n):
@@ -64,25 +75,6 @@ async def sendMessageToClient(websocket, path):
         await asyncio.sleep(2)
 
     # print(f"> {greeting}")
-
-
-video = cv2.VideoCapture(0)
-
-
-def gen(video):
-    while True:
-        success, image = video.read()
-        ret, jpeg = cv2.imencode('.jpg', image)
-        frame = jpeg.tobytes()
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
-
-
-@app.route('/video_feed')
-def video_feed():
-    global video
-    return Response(gen(video),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 if __name__ == "__main__":
