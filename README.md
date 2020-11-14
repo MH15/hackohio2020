@@ -5,14 +5,14 @@ Install OpenCV with `pip3 install opencv-python`.
 Run `python3 vision/opencv_test.py` in the Terminal. The integrated console in vscode doesn't work.
 
 # Setup Virtual Environment
-## Setup Virtual Environment for Mac
+## Mac
 1. Get to same level directory as the project you would like to create the virtual environment. 
 2. Type 'python3 -m venv env' in your terminal. This creates the virtual environment.
 3. Type 'source/env/bin activate'. This will activate your virtual environment.
 4. Only install packages when the right virtual environment is activated.
 5. Type 'deactivate' to deactivate the virtual environment.
 
-## Setup Virtual Environment for Windows
+## Windows
 1. Get to same level directory as the project you would like to create the virtual environment. 
 2. Type 'py -m pip install --user virtualenv' in your terminal. This installs the virtual environment creator.
 3. Type 'py -m venv env' in your terminal. This creates the virtual environment.
@@ -33,7 +33,15 @@ Run `python3 vision/opencv_test.py` in the Terminal. The integrated console in v
 - `opencv-python` for image manipulation
 - `dlib` for face landmark detection
 
-
-# UI
+# UI Setup
+## Mac
 1. `export FLASK_APP=flask/server.py`
+2. `flask run`
+
+## Windows
+1. `set FLASK_APP=flask/server.py`
+2. `flask run`
+
+## Windows PowerShell
+1. `$env:FLASK_APP = "flask/server.py"`
 2. `flask run`
