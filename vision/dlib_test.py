@@ -1,5 +1,8 @@
 import cv2
+import acapture
 import dlib
+import pyglview
+viewer = pyglview.Viewer()
 
 # Load the detector
 detector = dlib.get_frontal_face_detector()
@@ -8,10 +11,11 @@ detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 
 # read the image
-cap = cv2.VideoCapture(0)
+cap = acapture.open(0)
 
-while True:
-    _, frame = cap.read()
+
+def loop():
+    check, frame = cap.read()
     # Convert image into grayscale
     gray = cv2.cvtColor(src=frame, code=cv2.COLOR_BGR2GRAY)
 
@@ -33,14 +37,21 @@ while True:
             y = landmarks.part(n).y
 
             # Draw a circle
-            cv2.circle(img=frame, center=(x, y), radius=3, color=(0, 255, 0), thickness=-1)
+            cv2.circle(img=frame, center=(x, y), radius=3,
+                       color=(0, 255, 0), thickness=-1)
 
     # show the image
-    cv2.imshow(winname="Face", mat=frame)
+    # cv2.imshow(winname="Face", mat=frame)
+    if check:
+        viewer.set_image(frame)
 
     # Exit when escape is pressed
     if cv2.waitKey(delay=1) == 27:
-        break
+        sys.exit()
+
+
+viewer.set_loop(loop)
+viewer.start()
 
 # When everything done, release the video capture and video write objects
 cap.release()
