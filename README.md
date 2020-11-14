@@ -15,3 +15,10 @@ Run `python3 vision/opencv_test.py` in the Terminal. The integrated console in v
 # how to use dlib mouth detection
 1. install dlib and opencv (pip install opencv-python and pip install dlib)
 2. go to hackohio2020/vision directory and run "python dlib_test.py"
+
+
+# Dependencies
+- `acapture` a faster webcam reader for OpenCV
+- `pyglview` for drawing output to screen
+- `opencv-python` for image manipulation
+- `dlib` for face landmark detection
