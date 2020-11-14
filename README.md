@@ -32,3 +32,8 @@ Run `python3 vision/opencv_test.py` in the Terminal. The integrated console in v
 - `pyglview` for drawing output to screen
 - `opencv-python` for image manipulation
 - `dlib` for face landmark detection
+
+
+# UI
+1. `export FLASK_APP=flask/server.py`
+2. `flask run`
