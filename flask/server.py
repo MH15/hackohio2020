@@ -34,16 +34,6 @@ def video_feed():
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
-# https://www.pyimagesearch.com/2019/09/02/opencv-stream-video-to-web-browser-html-page/
-# initialize the output frame and a lock used to ensure thread-safe
-# exchanges of the output frames (useful when multiple browsers/tabs
-# are viewing the stream)
-outputFrame = None
-lock = threading.Lock()
-# initialize a flask object
-app = Flask(__name__)
-
-
 def dataBuilder(n):
     data = {
         "type": "status",
