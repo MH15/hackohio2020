@@ -29,7 +29,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/Users/matthewhall/github/mh15/hackohio2020/env"
+set -gx VIRTUAL_ENV "/Users/umarjara/Dev/hackathon/hackohio2020/env"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
