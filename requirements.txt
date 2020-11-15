@@ -3,3 +3,6 @@ opencv-python
 imutils
 flask-socketio
 websockets
+sanic
+jinja2
+sanic-jinja2
