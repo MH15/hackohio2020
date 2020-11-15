@@ -14,9 +14,7 @@ import {
   Modal
 
 } from "react-bootstrap"
-import React, { useState } from 'react';
-import IosRefresh from "react-ionicons/lib/IosRefresh"
-import LogoGithub from "react-ionicons/lib/LogoGithub"
+import React, { useState, useEffect } from 'react';
 import IosRefresh from "react-ionicons/lib/IosRefresh"
 import LogoGithub from "react-ionicons/lib/LogoGithub"
 import MdPause from "react-ionicons/lib/MdPause"
@@ -71,7 +69,7 @@ function App() {
           setStatus(json["value"])
       }
       // setStatus(data);
-      // console.log(json);
+      console.log(json);
     });
   }, []);
 

@@ -2,4 +2,22 @@
     <head>
         <title>{{ title }} - Hackysacks</title>
     </head>
+
+    <body>
+        <img src="/video_feed"/>
+
+        <script>
+            const socket = new WebSocket('ws://localhost:2204/websockets');
+            socket.addEventListener('open', function (event) {
+                console.log("connected to server")
+            });
+            socket.addEventListener("message", data => {
+                let json = JSON.parse(data.data)
+
+                // setStatus(data);
+                console.log(data);
+            });
+        </script>
+
+    </body>
 </html>
