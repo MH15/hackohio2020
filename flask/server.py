@@ -43,7 +43,7 @@ class States(Enum):
 
 STATE = States.NoFaceFound
 SOCKET = None
-THRESHOLD = 3
+THRESHOLD = 10
 
 # defining face detector
 face_cascade = cv2.CascadeClassifier(
@@ -54,7 +54,7 @@ ds_factor = 0.6
 
 ################### begin ###################
 class VideoCamera(object):
-    frames_cap = 5
+    frames_cap = 20
     current_frame = 0
     # limit to 3 seconds so like 90 frames
     frame_list = [States.NoFaceFound] * frames_cap
@@ -126,6 +126,8 @@ def sendResultsToClient(frames):
     if count_mask_frames > THRESHOLD:
         global STATE
         STATE = States.YesMask
+    print("STATE", STATE)
+    print(frames)
 
 ################### end ###################
 
@@ -136,63 +138,13 @@ def sendResultsToClient(frames):
 @app.route("/")
 def index(request):
     # await response.file('flask/templates/index.html')
-    return jinja.render("index.html", request)
-    # return jinja.render("template.html", request)
+    # return jinja.render("index.html", request)
+    return jinja.render("template.html", request)
 
     # return render_template("index.html")
 
-# async def generator_async(camera):
-#     frame = camera.get_frame()
-#     return (b'--frame\r\n'
-#             b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
-
-# `f()` is asynchronous iterator.
-# Since we don't raise `StopAsyncIteration`
-# it works "like" `while True`, until we manually break.
-# class f:
-#     # camera = None
-#     async def __aiter__(self, cam):
-#         self.camera = cam
-#         return self
-
-#     async def __anext__(self):
-#         return await generator_async(self.camera)
-
-# def gen(camera):
-#     # loop = asyncio.get_event_loop()
-#     # loop.run_forever()
-#     while True:
-#         # get camera frame
-#         frame = camera.get_frame()
-#         yield (b'--frame\r\n'
-#                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
-
-# loop = asyncio.get_event_loop()
-
 
 FPS = 29.97
-# STREAM_RESPONSE = \
-#     """
-# --frame
-# Content-Type: image/jpeg
-
-# """
-
-# async def websocketTest(websocket, path):
-
-#     while True:
-#         print("result")
-#         # Evaluate "func(10)" asynchronously calling callback when finished.
-#         # result = pool.apply_async(dataBuilder, [10], ).get()
-#         result = dataBuilder(1)
-#         print("done")
-
-#         print(json.dumps(result))
-
-#         loop = asyncio.get_event_loop()
-#         await websocket.send(json.dumps(result))
-#         # await websocket.send(json.dumps(result))
-#         await asyncio.sleep(.5)
 
 
 async def gen(camera, response):
@@ -259,11 +211,11 @@ def dataBuilder(n):
     if STATE == States.NoFaceFound:
         value = "inactive"
 
-    print("VALUEEEEE", value)
     data = {
         "type": "status",
         "value": value
     }
+    print(data)
     return data
 
 
@@ -273,35 +225,17 @@ def generateDataForClient():
 
 @app.websocket('/websockets')
 async def feed(request, ws):
-    print("SOCKET")
     # asyncio.get_event_loop().stop()
     # sys.exit(0)
     while True:
         data = dataBuilder(1)
+        print("SOCKET")
         j = json.dumps(data)
         await ws.send(j)
         await asyncio.sleep(1)
 
 
-def setup_sockets(websocket, path):
-    print("loading websockets")
-    SOCKET = websocket
-    # sys.exit()
-
-    while True:
-        print("test")
-
-#     # print(f"> {greeting}")
-
-# async def app_runner():
-#     app.run(host='0.0.0.0', port=2204,
-#             threaded=False, debug=True)
-
-
 app.static('/static/', 'flask/static')
-
-# app.run(host='0.0.0.0', port=2204,
-# debug=True)
 
 
 if __name__ == "__main__":
@@ -312,34 +246,3 @@ if __name__ == "__main__":
                 debug=True,
                 protocol=WebSocketProtocol
                 )
-
-    # print("test a")
-    # start_server = websockets.serve(setup_sockets, "localhost", 8765)
-    # start_server = websockets.serve(setup_sockets, "localhost", 8756)
-    # # print("test b")
-    # # # start sockets
-    # # sys.exit()
-    # loop.run_until_complete(start_server)
-    # loop.run_forever()
-
-    # loop = asyncio.get_event_loop()
-    # srv_coro = app.create_server(
-    #     return_asyncio_server=True,
-    #     asyncio_server_kwargs=dict(
-    #         start_serving=False
-    #     ),
-    #     port=2205,
-    #     protocol=WebSocketProtocol
-    # )
-    # srv = loop.run_until_complete(srv_coro)
-    # try:
-    #     assert srv.is_serving() is False
-    #     loop.run_until_complete(srv.start_serving())
-    #     assert srv.is_serving() is True
-    #     loop.run_until_complete(srv.serve_forever())
-    # except KeyboardInterrupt:
-    #     srv.close()
-    #     loop.close()
-
-    # print("test c")
-    # loop.run_until_complete(app_runner)

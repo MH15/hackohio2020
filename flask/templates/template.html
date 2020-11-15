@@ -13,10 +13,12 @@
             });
             socket.addEventListener("message", data => {
                 let json = JSON.parse(data.data)
-
-                // setStatus(data);
-                console.log(data);
-            });
+                console.log(json)
+                //switch (json["type"]) {
+                //    {# case "status": #}
+                //        console.log(json["value"])
+                //});
+            })
         </script>
 
     </body>
