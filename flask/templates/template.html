@@ -1,25 +1,92 @@
-<html>
-    <head>
-        <title>{{ title }} - Hackysacks</title>
-    </head>
+<!DOCTYPE html>
+<html lang="en">
 
-    <body>
-        <img src="/video_feed"/>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/static/css/test.css" />
 
-        <script>
-            const socket = new WebSocket('ws://localhost:2204/websockets');
-            socket.addEventListener('open', function (event) {
-                console.log("connected to server")
-            });
-            socket.addEventListener("message", data => {
-                let json = JSON.parse(data.data)
-                console.log(json)
+    <title>React App</title>
+</head>
+
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root">
+        <div class="container-fluid" style="background-color: #007bff; padding-bottom: 30px;">
+            <div class="row">
+                <div class="col">
+                    <nav class="navbar navbar-expand-lg text-light bg-primary">
+                        <a class="navbar-brand" href="#">Face Mask Recognition</a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                          <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </nav>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="card" style="width: 100%;">
+                        <div class="card-header">
+                            Video Stream
+                        </div>
+                        <img src="/video_feed" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="row" style="margin-bottom: 20px;">
+                        <div class="card" style="width: 100%;">
+                            <div class="card-header">
+                                System Status
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Card title</h5>
+                                <p class="card-text" id="status" style="text-align: center">Inactive</p>
+                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const socket = new WebSocket('ws://localhost:2204/websockets');
+        socket.addEventListener('open', function(event) {
+            console.log("connected to server")
+        });
+        let status = document.getElementById("status")
+        socket.addEventListener("message", data => {
+            let json = JSON.parse(data.data)
+            console.log(json.value)
+            status.innerHTML = json.value
+                // console.log(json.debug)
                 //switch (json["type"]) {
                 //    {# case "status": #}
                 //        console.log(json["value"])
                 //});
-            })
-        </script>
+        })
+    </script>
+</body>
 
-    </body>
 </html>

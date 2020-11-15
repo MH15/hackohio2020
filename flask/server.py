@@ -4,28 +4,15 @@ from sanic_jinja2 import SanicJinja2
 from sanic import response
 from sanic.response import json
 from sanic import Sanic
-from socket import socket
-from flask import Response
-from flask import Flask
-from flask import render_template
 from sanic.websocket import WebSocketProtocol
-# try:
-# from camera import VideoCamera
-# except ImportError:
-# pass  # skip circular import second pass
 
 import cv2
-import websockets
 import asyncio
-import threading
 import json
-import sys
-from multiprocessing import Pool
 from enum import Enum
 import warnings
 
-from concurrent.futures import ThreadPoolExecutor
-
+from websockets.protocol import State
 
 # https://medium.com/datadriveninvestor/video-streaming-using-flask-and-opencv-c464bf8473d6
 # initialize a flask object
@@ -43,7 +30,9 @@ class States(Enum):
 
 STATE = States.NoFaceFound
 SOCKET = None
-THRESHOLD = 10
+THRESHOLD = 5
+
+DEBUG = []
 
 # defining face detector
 face_cascade = cv2.CascadeClassifier(
@@ -54,7 +43,7 @@ ds_factor = 0.6
 
 ################### begin ###################
 class VideoCamera(object):
-    frames_cap = 20
+    frames_cap = 10
     current_frame = 0
     # limit to 3 seconds so like 90 frames
     frame_list = [States.NoFaceFound] * frames_cap
@@ -96,10 +85,11 @@ class VideoCamera(object):
         elif closer == 0:
             # faces are in screen and are close enough
             if self.current_frame == 0:
-                print("starting")
+                # print("starting")
+                self.frame_list = [States.NoFaceFound] * self.frames_cap
                 self.record = True
 
-            print(self.current_frame)
+            # print(self.current_frame)
             if self.record == True:
                 self.current_frame += 1
                 if len(noses) > 0:
@@ -119,29 +109,36 @@ class VideoCamera(object):
 
 
 def sendResultsToClient(frames):
-    count_mask_frames = 0
+    global DEBUG
+    count_yesmask_frames = 0
+    count_nomask_frames = 0
+    count_noperson_frames = 0
     for val in frames:
         if val == States.YesMask:
-            count_mask_frames += 1
-    if count_mask_frames > THRESHOLD:
-        global STATE
+            count_yesmask_frames += 1
+        if val == States.NoMask:
+            count_nomask_frames += 1
+        if val == States.NoFaceFound:
+            count_noperson_frames += 1
+    global STATE
+    if count_yesmask_frames > THRESHOLD:
         STATE = States.YesMask
+    else:
+        STATE = States.NoMask
+
     print("STATE", STATE)
     print(frames)
+    DEBUG = frames
 
 ################### end ###################
 
-
-# def whole_ass_app(websocket, path):
-    # print("launched")
 
 @app.route("/")
 def index(request):
     # await response.file('flask/templates/index.html')
     # return jinja.render("index.html", request)
     return jinja.render("template.html", request)
-
-    # return render_template("index.html")
+    # return await response.file("templates/template.html")
 
 
 FPS = 29.97
@@ -152,11 +149,6 @@ async def gen(camera, response):
     loop = asyncio.get_event_loop()
     # websockets.serve(websocketTest, "localhost", 8765)
     while True:
-        # print("socket", SOCKET)
-        # send the websocket
-        # if SOCKET is not None:
-        #     result = dataBuilder(1)
-        #     await SOCKET.send(json.dumps(result))
 
         # process video frame
         frame = await camera.get_frame()
@@ -214,8 +206,9 @@ def dataBuilder(n):
     data = {
         "type": "status",
         "value": value
+        # "debug": DEBUG
     }
-    print(data)
+    print("VALUEEE", value)
     return data
 
 
@@ -225,6 +218,7 @@ def generateDataForClient():
 
 @app.websocket('/websockets')
 async def feed(request, ws):
+    print("connect")
     # asyncio.get_event_loop().stop()
     # sys.exit(0)
     while True:
