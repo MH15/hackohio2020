@@ -68,7 +68,7 @@ async def sendMessageToClient(websocket, path):
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=2204, threaded=True, debug=True)
+    app.run(threaded=True, debug=True)
 
 
 start_server = websockets.serve(sendMessageToClient, "localhost", 8765)
