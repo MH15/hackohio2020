@@ -14,9 +14,7 @@ import {
   Modal
 
 } from "react-bootstrap"
-import React, { useState } from 'react';
-import IosRefresh from "react-ionicons/lib/IosRefresh"
-import LogoGithub from "react-ionicons/lib/LogoGithub"
+import React, { useState, useEffect, useRef } from 'react';
 import IosRefresh from "react-ionicons/lib/IosRefresh"
 import LogoGithub from "react-ionicons/lib/LogoGithub"
 import MdPause from "react-ionicons/lib/MdPause"
@@ -38,6 +36,9 @@ IosRefresh
 function App() {
   const [iconComponent, setIconComponent] = useState(<MdPause style={{ width: '100%', margin: '0 auto' }} fontSize="60px" color="#347eff" rotate={false} />)
 
+
+  const webSocket = useRef(null);
+
   // let socket = io("127.0.0.1:3210")
   // socket.on("connect", (data) => {
   //   console.log(data);
@@ -45,13 +46,14 @@ function App() {
 
   const [status, setStatus] = useState("inactive")
   useEffect(() => {
-    const socket = new WebSocket('ws://localhost:8765');
+    webSocket.current = new WebSocket('ws://localhost:8765');
     // Connection opened
-    socket.addEventListener('open', function (event) {
+    webSocket.current.addEventListener('open', function (event) {
       console.log("connected to server")
     });
-    socket.addEventListener("message", data => {
+    webSocket.current.addEventListener("message", data => {
       let json = JSON.parse(data.data)
+      console.log(json);
       switch (json["type"]) {
         case "status":
           switch (json["value"]) {
@@ -71,7 +73,6 @@ function App() {
           setStatus(json["value"])
       }
       // setStatus(data);
-      // console.log(json);
     });
   }, []);
 
