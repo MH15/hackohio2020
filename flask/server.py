@@ -30,7 +30,7 @@ class States(Enum):
 
 STATE = States.NoFaceFound
 SOCKET = None
-THRESHOLD = 5
+THRESHOLD = 3
 
 DEBUG = []
 
@@ -43,7 +43,7 @@ ds_factor = 0.6
 
 ################### begin ###################
 class VideoCamera(object):
-    frames_cap = 10
+    frames_cap = 6
     current_frame = 0
     # limit to 3 seconds so like 90 frames
     frame_list = [States.NoFaceFound] * frames_cap
@@ -126,8 +126,8 @@ def sendResultsToClient(frames):
     else:
         STATE = States.NoMask
 
-    print("STATE", STATE)
-    print(frames)
+    # print("STATE", STATE)
+    # print(frames)
     DEBUG = frames
 
 ################### end ###################
@@ -218,15 +218,15 @@ def generateDataForClient():
 
 @app.websocket('/websockets')
 async def feed(request, ws):
-    print("connect")
+    # print("connect")
     # asyncio.get_event_loop().stop()
     # sys.exit(0)
     while True:
         data = dataBuilder(1)
-        print("SOCKET")
+        # print("SOCKET")
         j = json.dumps(data)
         await ws.send(j)
-        await asyncio.sleep(1)
+        await asyncio.sleep(.1)
 
 
 app.static('/static/', 'flask/static')
