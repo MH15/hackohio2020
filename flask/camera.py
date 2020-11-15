@@ -4,7 +4,7 @@ import cv2
 # defining face detector
 face_cascade = cv2.CascadeClassifier(
     cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-nose_cascade = cv2.CascadeClassifier("script/haarcascade_nose.xml")
+nose_cascade = cv2.CascadeClassifier("flask/haarcascade_nose.xml")
 ds_factor = 0.6
 
 
