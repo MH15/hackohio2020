@@ -75,8 +75,8 @@ class VideoCamera(object):
             if w < 125:
                 closer = 1
             noses = nose_cascade.detectMultiScale(img, 1.5, 5)
-            for (x, y, w, h) in noses:
-                cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 1)
+            # for (x, y, w, h) in noses:
+            #     cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 1)
 
         await asyncio.sleep(.1)
 
