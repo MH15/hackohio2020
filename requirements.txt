@@ -1,4 +1,4 @@
 flask
 opencv-python
 imutils
-flask-socketio
+websockets

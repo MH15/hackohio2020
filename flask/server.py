@@ -17,7 +17,14 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
+    print("seeee")
+    # return "aaaas"
     return render_template("index.html")
+
+
+# @app.route("/aaa")
+# def test():
+#     return "yeyeyeyeye"
 
 
 def gen(camera):
@@ -32,16 +39,6 @@ def gen(camera):
 def video_feed():
     return Response(gen(VideoCamera()),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
-
-
-# https://www.pyimagesearch.com/2019/09/02/opencv-stream-video-to-web-browser-html-page/
-# initialize the output frame and a lock used to ensure thread-safe
-# exchanges of the output frames (useful when multiple browsers/tabs
-# are viewing the stream)
-outputFrame = None
-lock = threading.Lock()
-# initialize a flask object
-app = Flask(__name__)
 
 
 def dataBuilder(n):
@@ -78,6 +75,7 @@ async def sendMessageToClient(websocket, path):
 
 
 if __name__ == "__main__":
+    print("running")
     app.run(host='0.0.0.0', port=2204, threaded=True, debug=True)
 
 
