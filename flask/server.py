@@ -14,14 +14,15 @@ import warnings
 
 from websockets.protocol import State
 
+# Basis for video streaming in flaskL=:
 # https://medium.com/datadriveninvestor/video-streaming-using-flask-and-opencv-c464bf8473d6
-# initialize a flask object
 
+# Initialize a flask object
 app = Sanic(name="server")
 jinja = SanicJinja2(app)
 loop = asyncio.get_event_loop()
 
-
+# Enumerated class for mask detection state
 class States(Enum):
     NoFaceFound = 0
     NoMask = 1
@@ -34,7 +35,7 @@ THRESHOLD = 3
 
 DEBUG = []
 
-# defining face detector
+# Defining face detector
 face_cascade = cv2.CascadeClassifier(
     cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 nose_cascade = cv2.CascadeClassifier("script/haarcascade_nose.xml")
@@ -58,15 +59,14 @@ class VideoCamera(object):
         self.video.release()
 
     async def get_frame(self):
-        # extracting frames
+        # Extracting frames
         ret, img = self.video.read()
         img = cv2.flip(img, 1)
         img = cv2.resize(img, None, fx=ds_factor, fy=ds_factor,
                          interpolation=cv2.INTER_AREA)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-        # draw rectangles
-        # face_rects = face_cascade.detectMultiScale(gray, 1.3, 5)
+        # Draw rectangles on faces
         faces = face_cascade.detectMultiScale(gray, 1.1, 4)
         noses = []
         closer = 0
@@ -74,22 +74,21 @@ class VideoCamera(object):
             cv2.rectangle(img, (x, y), (x + w, y + h), (255, 255, 255), 2)
             if w < 125:
                 closer = 1
+            # Draw noses
             noses = nose_cascade.detectMultiScale(img, 1.5, 5)
-            # for (x, y, w, h) in noses:
-            #     cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 1)
+            #for (x, y, w, h) in noses:
+            #    cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 1)
 
         await asyncio.sleep(.1)
 
         if len(faces) < 1:
             pass
         elif closer == 0:
-            # faces are in screen and are close enough
+            # Check if faces are in screen and are close enough
             if self.current_frame == 0:
-                # print("starting")
                 self.frame_list = [States.NoFaceFound] * self.frames_cap
                 self.record = True
 
-            # print(self.current_frame)
             if self.record == True:
                 self.current_frame += 1
                 if len(noses) > 0:
@@ -100,10 +99,9 @@ class VideoCamera(object):
                 if self.current_frame >= len(self.frame_list) - 1:
                     self.record = False
                     sendResultsToClient(self.frame_list)
-                    # print(self.frame_list)
                     self.current_frame = 0
 
-        # encode OpenCV raw frame to jpg and displaying it
+        # Encode OpenCV raw frame to jpg and return
         ret, jpeg = cv2.imencode('.jpg', img)
         return jpeg.tobytes()
 
@@ -126,8 +124,6 @@ def sendResultsToClient(frames):
     else:
         STATE = States.NoMask
 
-    # print("STATE", STATE)
-    # print(frames)
     DEBUG = frames
 
 ################### end ###################
