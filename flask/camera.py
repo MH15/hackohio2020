@@ -1,13 +1,16 @@
+# Import the necessary packages
 import cv2
+
+# Skip circular import second pass
 try:
     from server import STATE, States
 except ImportError:
-    pass  # skip circular import second pass
+    pass 
 
 
 THRESHOLD = 10
 
-# defining face detector
+# Defining face detector
 face_cascade = cv2.CascadeClassifier(
     cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 nose_cascade = cv2.CascadeClassifier("script/haarcascade_nose.xml")
@@ -17,27 +20,27 @@ ds_factor = 0.6
 class VideoCamera(object):
     frames_cap = 20
     current_frame = 0
-    # limit to 3 seconds so like 90 frames
+    # Limit to 3 seconds so like 90 frames
     frame_list = [States.NoFaceFound] * frames_cap
     record = False
 
     def __init__(self):
-        # capturing video
+        # Capturing video
         self.video = cv2.VideoCapture(0)
 
     def __del__(self):
-        # releasing camera
+        # Releasing camera
         self.video.release()
 
     def get_frame(self):
-        # extracting frames
+        # Extracting frames
         ret, img = self.video.read()
         img = cv2.flip(img, 1)
         img = cv2.resize(img, None, fx=ds_factor, fy=ds_factor,
                          interpolation=cv2.INTER_AREA)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-        # draw rectangles
+        # Draw rectangles
         # face_rects = face_cascade.detectMultiScale(gray, 1.3, 5)
         faces = face_cascade.detectMultiScale(gray, 1.1, 4)
         noses = []
@@ -53,7 +56,7 @@ class VideoCamera(object):
         if len(faces) < 1:
             pass
         elif closer == 0:
-            # faces are in screen and are close enough
+            # Faces are in screen and are close enough
             if self.current_frame == 0:
                 print("starting")
                 self.record = True
@@ -72,7 +75,7 @@ class VideoCamera(object):
                     print(self.frame_list)
                     self.current_frame = 0
 
-        # encode OpenCV raw frame to jpg and displaying it
+        # Encode OpenCV raw frame to jpg and displaying it
         ret, jpeg = cv2.imencode('.jpg', img)
         return jpeg.tobytes()
 
